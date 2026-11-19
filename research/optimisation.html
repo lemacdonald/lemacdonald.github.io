@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Geometry of optimisation: skip connections and normalisation layers, large-step gradient descent, invariant manifolds and convergence near flat minima.">
+  <meta name="color-scheme" content="light">
+  <title>Geometry of optimisation — Lachlan E. MacDonald</title>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="../assets/js/math-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="site-name" href="../index.html">Lachlan E. MacDonald</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="../index.html">Home</a>
+    <a href="../research/index.html" aria-current="page">Research</a>
+<a href="../teaching.html">Teaching</a>
+<a href="../publications.html">Publication list</a>
+<a href="../talks.html">Talks</a>
+<a href="../about.html">About and CV</a>
+  </nav>
+</header>
+<main id="main" class="wrap">
+<header class="page-head"><h1>Geometry of optimisation</h1></header>
+<div class="project-introduction" id="overview">
+<p>A neural network can admit many solutions which fit the training data but differ in their geometric and statistical character. Which solution is found depends on the learning algorithm. I study the dynamics of these algorithms and their bias towards particular solutions, with an emphasis on gradient descent. Two questions guide this work: how architectural choices create the conditions needed for convergence, and what happens when the step size is larger than classical theory permits, as is often the case in practice.</p>
+<p>Gradient descent (GD) attempts to minimise a smooth loss function \(\ell:\mathbb R^p\to\mathbb R\) by taking steps in the direction of its negative gradient. For a neural network \(\phi_w\) with parameters \(w\in\mathbb R^p\), input-output training data \((a_i,b_i)_{i=1}^N\) determine a parameter-function map \(f(w)=(\phi_w(a_i))_{i=1}^N\). A cost function \(C\), such as the square or cross-entropy cost, compares the outputs of this map with the target outputs \((b_i)_{i=1}^N\). The loss and GD map are then</p>
+<div class="math-block">\[
+\ell(w)=\gamma(f(w))=\frac1N\sum_{i=1}^N C(\phi_w(a_i),b_i),
+\qquad \mathrm{GD}(\eta,w):=w-\eta\nabla\ell(w),
+\]</div>
+<p>where \(\eta&gt;0\) is the step size. I use <em>sharpness</em> to mean the largest eigenvalue \(\lambda_1\) of the loss Hessian \(\nabla^2\ell\).</p>
+</div>
+<div class="article-layout">
+<aside class="toc" aria-label="Contents"><strong>Contents</strong>
+<a href="#skip-connections">Architectures and convergence</a>
+<a href="#phenomenon">Large-step GD for the square cost</a>
+<a href="#cross-entropy">Large-step GD for cross-entropy type costs</a>
+<a href="#questions">Open questions</a>
+<a href="#papers">Papers and further reading</a></aside>
+<div class="prose">
+<section id="skip-connections"><h2>Architectures and convergence</h2>
+<p>A <em>skip connection</em> adds the input of a learned transformation to its output, for example \(z\mapsto z+g_w(z)\), providing a direct path across one or more layers. A <em>normalisation layer</em> rescales weights or intermediate outputs using their norms or statistics such as means and variances; weight normalisation applies this rescaling to weight vectors. Skip connections and normalisation layers are ubiquitous in practical neural net architectures, yet frequently neglected in theoretical optimisation analysis. The question of how these architectural choices affect optimisation was addressed in my <a href="https://proceedings.neurips.cc/paper_files/paper/2023/hash/2f4d6f8e0f4f543db12260696b2a3551-Abstract-Conference.html">2023 paper with Jack Valmadre, Hemanth Saratchandran and Simon Lucey</a></p>
+<p>Classical convergence results for GD can be obtained by assuming a Polyak–Łojasiewicz (PL) inequality and Lipschitz gradients:</p>
+<div class="math-block">\[
+\|\nabla\ell(w)\|^2\geq\mu(\ell(w)-\ell_*),
+\qquad \|\nabla\ell(w)-\nabla\ell(\widetilde w)\|\leq\beta\|w-\widetilde w\|.
+\]</div>
+<p>Here \(\ell_*\) is the infimum of the loss and \(\mu,\beta&gt;0\). For sufficiently small step size, these properties give linear convergence of the loss to \(\ell_*\).</p>
+<p>A sufficient condition to ensure the PL inequality (at least pointwise) is that \(f\) is a submersion, i.e. that \(Df(w)\) has full row rank for all \(w\). Overparametrisation makes this possible, since there must be at least as many parameters as output coordinates on the training data. A PL inequality for the cost then passes to the loss with a factor given by the smallest eigenvalue of \(Df(w)Df(w)^T\). Under certain conditions we give bounds on this eigenvalue in terms of the constituent layers, and demonstrate empirically that skip connections improve the relevant singular value distributions.</p>
+<figure><a href="../assets/figures/skip-jacobians.svg" aria-label="View figure at full size"><img src="../assets/figures/skip-jacobians.svg" alt="Three layer-Jacobian singular-value histograms shift to the right as skip connections are added; a fourth plot shows faster loss decrease" width="1194" height="270" loading="lazy"></a><figcaption>Adding skip connections shifts the singular value distributions of composite layer Jacobians upwards, with faster training in these experiments. Chain, Res and ResAvg are the chain network, residual network and modified residual network described in the paper. Means over ten trials. <a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/2f4d6f8e0f4f543db12260696b2a3551-Paper-Conference.pdf">Figure 2</a>.</figcaption></figure>
+<p>Normalisation layers address the Lipschitz gradients condition. Bounds on the layers and their derivatives give Lipschitz gradients over loss sublevel sets throughout parameter space. We use this together with submersivity to prove global convergence for a class of weight- and entry-normalised residual networks.</p>
+<div class="theorem"><span class="theorem-label">Theorem (global convergence)</span><p>For certain weight-normalised residual networks, with linearly independent input data, appropriately rescaled residual branches and a continuously differentiable convex cost, there is a fixed step size for which GD converges in loss to the global infimum from any initialisation. This includes costs such as cross-entropy, whose infimum may only be attained at infinity.</p></div>
+<p>A uniform PL constant is unavailable in this global setting. The proof instead shows that the positive regularity bounds along the trajectory deteriorate slowly enough for convergence to persist. The theorem has restrictive architectural and data hypotheses, but the mechanism it identifies also suggests changes to practical architectures. In particular, adding a suitably normalised deterministic map to learned convolutional skip connections improves training speed as predicted.</p>
+<figure><a href="../assets/figures/skip-training.svg" aria-label="View figure at full size"><img src="../assets/figures/skip-training.svg" alt="Training loss for original and modified ResNets on CIFAR10, CIFAR100 and ImageNet; the modified networks have lower loss" width="1194" height="327" loading="lazy"></a><figcaption>Original and modified ResNets, with learned convolutional skip maps \(A\) replaced by \(I+A\), where \(I\) is a rescaled average-pooling map. The plots show mean training loss, with one standard deviation shaded, over ten trials on CIFAR and three on ImageNet. <a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/2f4d6f8e0f4f543db12260696b2a3551-Paper-Conference.pdf">Figure 3</a>.</figcaption></figure>
+</section>
+
+<section id="phenomenon"><h2>Large-step GD for the square cost</h2>
+<p>The preceding theory requires the step size to be smaller than twice the reciprocal supremum of the sharpness, which is a sufficient condition for linear stability of the algorithm at any fixed point. The reason for this classical stability threshold is already visible for a quadratic loss \(\ell(w)=\tfrac12\lambda w^2\), with \(\lambda&gt;0\). Its GD map is</p>
+<div class="math-block">\[w\mapsto (1-\eta\lambda)w.\]</div>
+<p>Thus \(0&lt;\eta&lt;2/\lambda\) gives convergence to zero; at \(\eta=2/\lambda\) the iterates oscillate with constant amplitude; and for \(\eta&gt;2/\lambda\) a nonzero initial point gives divergence.</p>
+<figure class="project-animation wide-animation"><video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/quadratic-stability-poster.webp" width="1500" height="500" aria-label="Gradient descent on a quadratic: convergent oscillations, a constant-amplitude oscillation, and divergence" aria-describedby="quadratic-caption"><source src="../assets/media/quadratic-stability.mp4" type="video/mp4"><p><a href="../assets/media/quadratic-stability.mp4">Open the animation</a>.</p></video><figcaption id="quadratic-caption">GD on a quadratic, below, at and above the classical stability threshold. Animation from my 2026 talk.</figcaption></figure>
+<p>In 2021, <a href="https://arxiv.org/abs/2103.00065">Cohen, Kaur, Li, Kolter and Talwalkar</a> demonstrated systematically that neural networks are routinely trained beyond this pointwise stability threshold. The sharpness rises during training, then fluctuates near or above \(2/\eta\), while the loss continues to decrease over longer timescales. They called this the <em>edge of stability</em>. The changing curvature of a neural-network loss allows behaviour which a fixed quadratic cannot exhibit.</p>
+<figure><a href="../assets/figures/cohen-edge-of-stability.webp" aria-label="View figure at full size"><img src="../assets/figures/cohen-edge-of-stability.webp" alt="Cohen and colleagues' training-loss and sharpness plots for several step sizes, with square loss above and cross-entropy below" width="1193" height="491" loading="lazy"></a><figcaption>Training loss (left) and sharpness (centre and right) at several step sizes, for square loss (top) and cross-entropy (bottom). Dashed horizontal lines mark \(2/\eta\). Larger step sizes lead to smaller sharpness thresholds, and loss decrease continues despite oscillations and violations of the pointwise threshold. From Cohen et al., <a href="https://arxiv.org/abs/2103.00065">Gradient Descent on Neural Networks Typically Occurs at the Edge of Stability</a>, ICLR 2021; figure reproduced in my talk.</figcaption></figure>
+<p>This suggests that large step size can itself bias GD towards flatter minima: increasing \(\eta\) lowers the sharpness compatible with local stability. Larger step size can also lead to better test performance in some settings. The following ResNet18 experiment illustrates this even when both step sizes eventually fit the training data.</p>
+<figure><a href="../assets/figures/resnet18-cifar10-accuracy.webp" aria-label="View figure at full size"><img src="../assets/figures/resnet18-cifar10-accuracy.webp" alt="ResNet18 training and test accuracy on CIFAR10 for step sizes 0.1 and 0.001: both reach full training accuracy, while 0.1 has higher test accuracy" width="2000" height="1000" loading="lazy"></a><figcaption>ResNet18 on CIFAR10, from my 2026 talk. Dotted curves show training accuracy and solid curves test accuracy; shading shows standard deviations. Both step sizes reach full training accuracy, but the larger step size gives better test accuracy in these runs.</figcaption></figure>
+<h3>Scalar-output least squares</h3>
+<p>My <a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/d9af4d6ac714626b652da5616ca71f99-Abstract-Conference.html">2025 paper with Hancheng Min, Leandro Palma, Salma Tarmoun, Ziqing Xu and René Vidal</a> seeks to make the geometric mechanism behind the bias towards flat minima explicit. We consider overparametrised least squares with scalar output,</p>
+<div class="math-block">\[\ell(w)=\frac12(f(w)-\tau)^2,\qquad f:\mathbb R^p\to\mathbb R,\quad p&gt;1.\]</div>
+<p>When \(\tau\) is a regular value, the solutions form a smooth hypersurface \(M=f^{-1}\{\tau\}\). This \(M\) is an <em>invariant manifold</em> for \(\mathrm{GD}\), and the key idea of our analysis is to prove a <em>normal form</em> for large-step GD in a neighbourhood of this invariant manifold, i.e. a choice of coordinates in which the implicit dynamics are rendered explicit.</p>
+<p> The coordinates we choose are, up to a minor reparametrisation, tubular neighbourhood coordinates: all points near \(M\), can be realised by a pair \((x,y)\in M\times\mathbb{R}\) as in the picture below.</p>
+<figure class="figure-medium"><a href="../assets/figures/scalar-tubular-coordinates-talk.webp" aria-label="View figure at full size"><img src="../assets/figures/scalar-tubular-coordinates-talk.webp" alt="The solution hyperbola of a two-layer scalar network, with a shaded tubular neighbourhood, base point x, unit normal nu(x), signed displacement y and the corresponding nearby parameter Phi(x,y)" width="1225" height="1190" loading="lazy"></a><figcaption>Tubular coordinates for the two-layer scalar network, adapted from my 2026 talk. The black curve is the solution manifold \(M\), the red point is the flat minimum \(F\), and the shaded neighbourhood is the tubular neighbourhood. A base point \(x\in M\), unit normal \(\nu(x)\) and signed displacement \(y\) determine the nearby parameter \(w=\Phi(x,y)=x+y\nu(x)\).</figcaption></figure>
+<p>We also assume that there exists in \(M\) an <em>isolated</em> minimiser \(F\in M\) of the sharpness \(\lambda|_M\), and that \(\lambda|_M\) is geodesically strongly convex in a neighbourhood of \(F\).</p>
+<div class="theorem"><span class="theorem-label">Theorem (normal form near a flat minimum)</span>
+<p>Subject to additional assumptions in the paper and a reparametrisation of \(y\), in the coordinates \((x,y)\) in a neighbourhood of the flat minimum \(F\), \(\mathrm{GD} = (\mathrm{GD}_x,\mathrm{GD}_y)\) has the form:</p>
+<div class="math-block">\[
+\begin{aligned}
+\operatorname{GD}_x(\eta,x,y)&amp;=x-\zeta(\eta,x)y^2\nabla_M\lambda(x)+O\!\left(|y|^3d_M(x,F)\right),\\
+\operatorname{GD}_y(\eta,x,y)&amp;=(1-\eta\lambda(x))y+y^3+O(y^4).
+\end{aligned}
+\]</div>
+Here \(\zeta(\eta,x)\) is a positive \(C^1\) function, \(\nabla_M\) is the Riemannian gradient, and \(d_M(x,F)\) is geodesic distance to \(F\).
+</div>
+<p>Thus, to leading order, the tangential component is Riemannian GD on sharpness along \(M\), with step size \(\zeta(\eta,x)y^2\) controlled by the normal oscillation. The normal component is a parametrised flip bifurcation. At \(x = F\), the latter classically admits three convergence behaviours for all \(\eta\) sufficiently close to \(2/\lambda_F\): exponential convergence to zero when \(\eta\lambda_F&lt;2\); polynomial convergence to zero when \(\eta\lambda_F=2\); exponential convergence to a stable period-two orbit when \(\eta\lambda_F&gt;2\). These flip dynamics thus act as an automatic step-schedule on the Riemannian GD on \(\lambda\) coming from the \(x\)-update, from which the following convergence theorems follow.</p>
+<div class="theorem"><span class="theorem-label">Theorem (convergence near a flat minimum)</span>
+<p>For all initialisations sufficiently close to \(F\) with \(y\neq0\) and step sizes sufficiently close to \(2/\lambda_F\), the iterates \((x_t,y_t)\) of GD satisfy:</p>
+<ul>
+<li><strong>Subcritical, \(\eta&lt;2/\lambda_F\):</strong> transient instability is overcome in finite time, followed by exponential convergence to a global loss minimum. For initial base points \(x_0\notin F\), the limit is suboptimally flat.</li>
+<li><strong>Critical, \(\eta=2/\lambda_F\):</strong> \(\Theta(t^{-1/2})\) convergence to the flat minimum.</li>
+<li><strong>Supercritical, \(\eta&gt;2/\lambda_F\):</strong> exponential convergence to a stable period-two orbit across the flat minimum, with amplitude of order \(\sqrt{\eta\lambda_F-2}\).</li>
+</ul>
+</div>
+<figure class="project-animation wide-animation"><video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/scalar-gd-regimes-poster.webp" width="1500" height="500" aria-label="Three simultaneous trajectories of the two-layer scalar factorisation problem: subcritical, critical and supercritical" aria-describedby="scalar-regimes-caption"><source src="../assets/media/scalar-gd-regimes.mp4" type="video/mp4"><p><a href="../assets/media/scalar-gd-regimes.mp4">Open the animation</a>.</p></video><figcaption id="scalar-regimes-caption">The three regimes for \(\ell(w_1,w_2)=\tfrac12(w_1w_2-1)^2\), shown together in one animation. The black curve is the solution manifold and the red point is its flat minimum. The animation labels its sharpness \(\lambda_*\); in our notation this is \(\lambda_F=2\), giving \(\eta_*=1\). From left to right: convergence to a suboptimally flat minimum, slower convergence to the flat minimum, and convergence to a period-two orbit across it.</figcaption></figure>
+<p>These results hold for deep scalar factorisation: \(f(w)=w_L\cdots w_1\), with arbitrary depth \(L\geq2\) and nonzero target. The two-layer example depicts the same mechanism in a setting where the trajectories can be drawn.</p>
+<div id="large-step-2026"><h3 id="geometry">Vector-valued outputs and manifolds of flat minima</h3>
+<p>Extending this analysis beyond scalar output raises two conceptual problems. First, there are now several normal directions. A useful normal form requires a dimension reduction which separates the oscillating direction from the others. Second, flat minima need not be isolated. For problems such as matrix factorisation, they form manifolds, so geodesic strong convexity about a single flat minimum must be replaced by an appropriate condition along this manifold.</p>
+<p>My <a href="https://arxiv.org/abs/2607.08380v2">2026 paper with René Vidal</a> resolves these problems for overparametrised least squares with vector-valued output,</p>
+<div class="math-block">\[\ell(w)=\frac12\|f(w)-\tau\|^2,\qquad f:\mathbb R^p\to\mathbb R^q,\quad p&gt;q.\]</div>
+
+<p>We continue to assume that \(\tau\) is a regular value in the range of \(f\), so that the solutions again form a smooth manifold \(M=f^{-1}\{\tau\}\), and the nontrivial Hessian eigenvectors are precisely the normal directions to \(M\). There are now precisely \(q\) such nontrivial eigendirections \(\nu_1,\dots,\nu_{q}\) with corresponding eigenvalues \(\lambda_1\geq\cdots\geq\lambda_q\). Anticipating a normal form that requires taking the gradient of \(\lambda_1\), we consider only points where \(\lambda_1\) is strictly separated from the other eigenvalues.</p>
+<p>In general, the local minima of sharpness on \(M\) can themselves form a manifold \(F\subset M\). The condition replacing strong convexity of \(\lambda_1\) is then that \(\lambda_1\) is Morse–Bott along \(F\): its Riemannian Hessian is positive in directions normal to \(F\) within \(M\). A concrete example is deep matrix factorisation: under fairly light assumptions the flat minima are not only a manifold, but a fibre bundle over a product of spheres, with typical fibre being the solution manifold of a one-lower-dimensional matrix factorisation problem.</p>
+
+<figure class="figure-medium"><a href="../assets/figures/flat-minima-fibre-bundle.webp" aria-label="View figure at full size"><img src="../assets/figures/flat-minima-fibre-bundle.webp" alt="A circle base, a curved interval fibre and a surface illustrating the fibre bundle of flat matrix-factorisation minima" width="1536" height="1024" loading="lazy"></a><figcaption>The fibre-bundle structure for two-layer, 2 × 2 matrix factorisation. The base is a circle; the middle and right pictures show connected components of the fibre and total space. This is an illustration of a bundle embedded in a higher-dimensional parameter space. <a href="https://arxiv.org/abs/2607.08380v2">Figure 2 of the paper</a>.</figcaption></figure>
+<p>In the scalar output case \(q=1\), our coordinates were defined via a tubular neighbourhood, with the normal direction being precisely the sole nontrivial Hessian eigendirection. In the vector ouput case \(q>1\), the loss Hessian admits \(q\) nontrivial eigenvalues, necessitating dimension reduction. This is achieved using an invariant manifold and foliation, whose existence is the topic of my paper on <a href="https://arxiv.org/abs/2604.18202">locally invariant manifolds and foliations</a>.</p>
+<div class="theorem" id="invariant-geometry"><span class="theorem-label">Theorem (locally invariant manifolds and foliations)</span>
+<p>Any point \(x_*\in F\) admits a locally GD-invariant centre manifold containing a neighbourhood of \(x\) in \(M\) that is tangent to the sum of \(TM\) and the top Hessian eigendirection, whose points parametrise the leaves of a locally GD-invariant stable foliation which are tangent to the other nontrivial Hessian eigendirections.</p>
+</div>
+<p>A cartoon of the centre manifold and stable foliation is given below.</p>
+<figure class="figure-medium"><a href="../assets/figures/centre-manifold-stable-foliation.webp" aria-label="View figure at full size"><img src="../assets/figures/centre-manifold-stable-foliation.webp" alt="Blue solution manifold M inside a red centre manifold, with green stable leaves and red and green Hessian eigenvector directions" width="1448" height="1086" loading="lazy"></a><figcaption>The solution manifold \(M\) (blue), centre manifold (red) and stable foliation (green). The fields \(\nu_1\) and \(\nu_{2:q}\) are the leading and remaining normal eigendirections of the Hessian. In this low-dimensional cartoon, \(F\) would be a single point of \(M\).</figcaption></figure>
+<p>The coordinates we choose are, up to a reparametrisation of \(y_1\), centre-manifold and stable-foliation coordinates: all points sufficiently near a point of \(F\) can be realised by a pair \((x,y)\in M\times\mathbb R^q\), with \(y=(y_1,y_{2:q})\). Here \((x,y_1)\) are coordinates on the centre manifold and \(y_{2:q}\) are coordinates along the stable leaves, as in the picture above. Contraction along these leaves reduces the analysis to the coupling between \(x\) and \(y_1\).</p>
+<div class="theorem"><span class="theorem-label">Theorem (normal form near a manifold of flat minima)</span>
+<p>Subject to the additional assumptions in the paper, for all points \(x_*\in F\) and all \(\eta\) sufficiently close to \(2/\lambda_1|_F\), the coordinates \((x,y_1,y_{2:q})\) may be chosen such that \(\mathrm{GD}=(\mathrm{GD}_x,\mathrm{GD}_{y_1},\mathrm{GD}_{y_{2:q}})\) has the form:</p>
+<div class="math-block">\[
+\begin{aligned}
+\operatorname{GD}_x(\eta,x,y_1)&amp;=x-\zeta(\eta,x)y_1^2\nabla_M\lambda_1(x)+O\!\left(|y_1|^3d_M(x,F)\right),\\
+\operatorname{GD}_{y_1}(\eta,x,y_1)&amp;=(1-\eta\lambda_1(x))y_1+y_1^3+O(y_1^4),\\
+\operatorname{GD}_{y_{2:q}}(\eta,x,y_1,y_{2:q})&amp;=(I-\eta\Lambda_{2:q}(x))y_{2:q}+O\!\left(|y_1|\|y_{2:q}\|+\|y_{2:q}\|^2\right).
+\end{aligned}
+\]</div>
+<p>Here \(\zeta(\eta,x)\) is a positive \(C^1\) function, \(\nabla_M\) is the Riemannian gradient, \(d_M(x,F)\) is geodesic distance to \(F\), and \(\Lambda_{2:q}(x)\) has eigenvalues \(\lambda_2(x),\ldots,\lambda_q(x)\). The coordinates are \(C^4\) in the normal variables and \(C^1\) in the base variable.</p>
+</div>
+
+<p>Notice the \(x,y_1\) component of the update is the same as in the \(q=1\), and in particular is completely independent of \(y_{2:q}\); this is thanks to the invariance of the centre manifold and stable foliation. The new coordinate \(y_{2:q}\) simply contracts to zero thanks to the spectral gap condition and the assumption that \(\eta\) is sufficiently close to \(2/\lambda_1|_F\). The convergence results are therefore essentially the same as in the \(q=1\) case.</p>
+<div class="theorem" id="convergence"><span class="theorem-label">Theorem (convergence near a manifold of flat minima)</span>
+<p>Under the same hypotheses, for all initialisations sufficiently close to \(F\) with \(y_{1,0}\neq0\) and step sizes sufficiently close to \(2/\lambda_F\), the iterates \((x_t,y_t)\) of GD satisfy:</p>
+<ul>
+<li><strong>Subcritical, \(\eta&lt;2/\lambda_F\):</strong> transient instability is overcome in finite time, followed by exponential convergence to a global loss minimum. For initial base points \(x_0\notin F\), the limit is suboptimally flat.</li>
+<li><strong>Critical, \(\eta=2/\lambda_F\):</strong> \(\Theta(t^{-1/2})\) convergence to a point of \(F\).</li>
+<li><strong>Supercritical, \(\eta&gt;2/\lambda_F\):</strong> exponential convergence to a stable period-two orbit across \(F\), with amplitude of order \(\sqrt{\eta\lambda_F-2}\).</li>
+</ul>
+</div>
+<p>The following plots show these three regimes in deep matrix factorisation.</p>
+<figure><a href="../assets/figures/subcritical.svg" aria-label="View figure at full size"><img src="../assets/figures/subcritical.svg" alt="Subcritical normal distances decay exponentially while distances along M to F settle at positive values" loading="lazy"></a><figcaption>Subcritical regime: \(\|y_t\|\) (left) and \(d_M(x_t,F)\) (right), for five trials of a three-layer, 2 × 2 matrix-factorisation problem. Initial instability is followed by exponential convergence to a suboptimally flat solution. <a href="https://arxiv.org/abs/2607.08380v2">Figure 3</a>.</figcaption></figure>
+<figure><a href="../assets/figures/critical.svg" aria-label="View figure at full size"><img src="../assets/figures/critical.svg" alt="Critical normal and tangential distances decrease with the reference rate t to the minus one half" loading="lazy"></a><figcaption>Critical regime: both \(\|y_t\|\) and \(d_M(x_t,F)\) decay at the predicted \(t^{-1/2}\) rate. Dotted lines give reference slopes. <a href="https://arxiv.org/abs/2607.08380v2">Figure 4</a>.</figcaption></figure>
+<figure><a href="../assets/figures/supercritical.svg" aria-label="View figure at full size"><img src="../assets/figures/supercritical.svg" alt="Supercritical normal distances approach a nonzero oscillation amplitude while distances along M to F decay exponentially" loading="lazy"></a><figcaption>Supercritical regime: the normal component approaches a nonzero oscillation while the base coordinate converges towards \(F\). The limiting period-two orbit need not have exactly symmetric endpoints in the original parameters. <a href="https://arxiv.org/abs/2607.08380v2">Figure 5</a>.</figcaption></figure>
+</div>
+</section>
+
+<section id="cross-entropy"><h2>Large-step GD for cross-entropy type costs</h2>
+<p>Convergence theorems for large-step GD with logistic losses were already proved by <a href="https://proceedings.mlr.press/v247/wu24b.html">Jingfeng Wu, Peter Bartlett, Matus Telgarsky and Bin Yu</a>, leveraging the asymptotically flat nature of of such loss landscapes on linearly separable data using optimisation-theoretic techniques. A natural question is whether such theorems can also be obtained from the geometric perspective of invariant manifolds and normal forms as used in our least-squares theory.</p>
+
+<p>The key problem that must be overcome in performing such analysis is the identification of a suitable invariant reference manifold. In my <a href="https://arxiv.org/abs/2611.17459">2026 paper with Salma Tarmoun, Konstantinos Emmanouilidis, Ziqing Xu and René Vidal</a>, we consider for this manifold a line \(\mathcal R=\operatorname{span}\{v\}\), with \(\|v\|=1\); we require \(\nabla\ell(xv)\in\mathcal R\), so GD preserves this line. A simple example of an objective admitting such a line is given in the animation below; we also prove that cross-entropy regression on suitably symmetric data admits such a line, namely the max-margin line.</p>
+<figure class="project-animation wide-animation">
+  <video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/classification-toy-self-stabilisation-poster.webp" width="1300" height="560" aria-label="Animated gradient descent on the toy loss exp(-x) y squared: growing oscillations drive x forwards, reducing transverse curvature until the oscillations contract" aria-describedby="classification-toy-caption">
+    <source src="../assets/media/classification-toy-self-stabilisation.mp4" type="video/mp4">
+    <p><a href="../assets/media/classification-toy-self-stabilisation.mp4">Open the animation</a>.</p>
+  </video>
+  <figcaption id="classification-toy-caption">GD on the toy loss \(\ell(x,y)=e^{-x}y^2\), from the NeurIPS 2026 slides. Left: iterates oscillate across the blue invariant line \(y=0\). Right: the coordinates \(x_t,|y_t|\) and the transverse stability quantity \(2\eta e^{-x_t}\). As \(x_t\) advances, this quantity falls below 2 and the oscillations damp. Here \(y=0\) is a line of zero-loss minima; separable logistic regression instead has a decreasing loss along its reference line.</figcaption>
+</figure>
+<p>At a high level, our coordinates now follow a similar decomposition to what we saw in the square loss case: write \(w=xv+y\), where \(x\in\mathbb R\) is the coordinate along the line and \(y\) is the orthogonal component. Define the restricted loss and curvature operator by</p>
+<div class="math-block">\[h(x)=\ell(xv),\qquad H(x)=\nabla^2\ell(xv),\]</div>
+<div class="theorem"><span class="theorem-label">Theorem (normal form around an invariant reference line)</span>
+<p>Suppose that the top eigenvalue \(\lambda_1\) of \(H\) is simple and that its top eigenvector is orthogonal to \(\mathcal R\). Then in the coordinates \(x,y\) one has \(\mathrm{GD}=(\mathrm{GD}_x,\mathrm{GD}_y)\) taking the form</p>
+<div class="math-block">\[
+\begin{aligned}
+\operatorname{GD}_x(\eta,x,y)&amp;=x-\eta h'(x)-\frac\eta2 y^T H'(x)y+O(\|y\|^3),\\
+\operatorname{GD}_y(\eta,x,y)&amp;=(I-\eta H(x))y+O(\|y\|^2).
+\end{aligned}
+\]</div>
+</div>
+<p>Assuming an exponential tail on the loss and curvature in the same direction along the invariant line, as we see in cross-entropy classification on symmetric data, enables the following three-phase convergence result.</p>
+<div class="theorem"><span class="theorem-label">Theorem (four-phase convergence)</span>
+<p>For all initial conditions sufficiently close to \(\mathcal R\) and all step sizes sufficiently close to the initial stability threshold, the iterates of GD evolve according to the following three phases:</p>
+<ol>
+<li><strong>Instability and transition:</strong> In finite time, the iterates enter a region wherein the step size is below the stability threshold.</li>
+<li><strong>Linear contraction:</strong> For finite time, the iterates undergo exponential contraction in the orthogonal direction toward \(\mathcal R\).</li>
+<li><strong>Polynomial contraction:</strong> Asymptotically, the orthogonal component tends to zero at a polynomial rate as the sharpness and loss both tend to zero at a polynomial rate.</li>
+</ol>
+</div>
+<p>The normal form explains why these phases occur. In the top eigendirection of \(H\) with sharpness \(\lambda_1\), the leading multiplier in the \(y\)-update is \(1-\eta\lambda_1\). If \(\eta\lambda_1&gt;2\), its sign is negative and its magnitude exceeds one, producing growing oscillations. Meanwhile, \(h'(x)&lt;0\) drives \(x\) forwards. Since \(H'(x)\preceq0\), the quadratic coupling in the \(x\)-update adds forward drift: larger transverse excursions accelerate the motion towards smaller curvature. The instability thus helps remove its own cause, yielding the first phase of convergence.</p>
+<p>Once the reference sharpness falls below the stability threshold of the step size, \(1-\eta\lambda_1\) becomes uniformly contractive for as long as \(\lambda_1\) can be bounded below by some fixed positive constant, yielding the linear contraction phase. Asymptotically, \(\lambda_1\) goes to zero at a polynomial rate, causing the contraction multiplier \(1-\eta\lambda_1\) to go to 1 at a polynomial rate, hence leading to the polynomial contraction of the iterates toward \(\mathcal R\).</p>
+
+<figure class="figure-medium"><a href="../assets/figures/classification-logistic-damping.svg" aria-label="View figure at full size"><img src="../assets/figures/classification-logistic-damping.svg" alt="The magnitude of the orthogonal component in symmetric logistic regression against iteration: initial amplification, transition, linear contraction and polynomial decay" width="844" height="392" loading="lazy"></a><figcaption>Symmetric logistic regression: the orthogonal component \(\|y_t\|\), labelled \(\|\theta_t^\perp\|\) in the paper, against iteration \(t\). Initial amplification gives way to nonexpansion, linear contraction and polynomial decay. Dashed envelopes bound the latter two phases. From Tarmoun et al., <a href="https://arxiv.org/pdf/2611.17459v1#page=9">Figure 3, upper panel</a>, with the shared iteration axis retained (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>).</figcaption></figure>
+</section>
+
+<section id="questions"><h2>Open questions</h2>
+<p>This geometric analysis of large-step gradient descent is local, requiring an invariant manifold about which to prove normal forms and convergence theorems. To make this geometric theory global therefore requires identifying invariant manifolds connecting practical initialisations to solution sets, along which normal forms could be derived to cover the entire training trajectory.</p>
+<p>Further questions concern nonlinear architectures and the inclusion of stochasticity and momentum in the optimisation algorithms. A statistical theory connecting these dynamical mechanisms to generalisation is also desirable.</p>
+</section>
+<section id="papers"><h2>Papers and further reading</h2>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2611.17459">Classification with Large-Step Gradient Descent: Unifying Self-Stabilization and Convergence Rates</a></h3>
+  <p class="authors">S. Tarmoun, L. E. MacDonald, K. Emmanouilidis, Z. Xu and R. Vidal</p>
+  <p class="venue">2026 · NeurIPS · accepted · arXiv:2611.17459</p>
+  <p class="annotation">Invariant reference geometry, convergence bounds and transient implicit bias for exponential-tail losses.</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2611.17459">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2607.08380">Dynamics of Gradient Descent with Large Step Size Near a Manifold of Flat Minima</a></h3>
+  <p class="authors">L. E. MacDonald and R. Vidal</p>
+  <p class="venue">2026 · Preprint · arXiv:2607.08380</p>
+  <p class="annotation">A local normal form in arbitrary codimension, three convergence regimes, and the geometry of flat minima in deep matrix factorisation.</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2607.08380">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2604.18202">Locally Invariant Manifolds and Foliations</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2026 · Preprint · arXiv:2604.18202</p>
+  <p class="annotation">Locally invariant geometry for smooth maps that need not be invertible, motivated by large-step optimisation.</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2604.18202">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/d9af4d6ac714626b652da5616ca71f99-Abstract-Conference.html">Convergence Rates for Gradient Descent on the Edge of Stability for Overparametrised Least Squares</a></h3>
+  <p class="authors">L. E. MacDonald, H. Min, L. Palma, S. Tarmoun, Z. Xu and R. Vidal</p>
+  <p class="venue">2025 · NeurIPS 38</p>
+  <p class="annotation">The codimension-one starting point of the large-step program, subsequently extended and refined in the 2026 work.</p>
+  <div class="paper-links"><a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/d9af4d6ac714626b652da5616ca71f99-Abstract-Conference.html">Proceedings</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1109/MSP.2026.3665010">On the Convergence, Implicit Bias, and Edge of Stability of Gradient Descent in Deep Learning: Reviewing Recent Progress</a></h3>
+  <p class="authors">H. Min, L. E. MacDonald and R. Vidal</p>
+  <p class="venue">2026 · IEEE Signal Processing Magazine 43(3), 37–51 · equal first contribution</p>
+  <div class="paper-links"><a href="https://doi.org/10.1109/MSP.2026.3665010">Journal</a></div>
+</article>
+<h3>Further reading</h3>
+<ul class="reading-list">
+<li>
+  <a href="https://proceedings.mlr.press/v247/wu24b.html">Large Stepsize Gradient Descent for Logistic Loss: Non-Monotonicity of the Loss Improves Optimization Efficiency</a>
+  <small class="authors">J. Wu, P. L. Bartlett, M. Telgarsky and B. Yu</small>
+  <small class="venue">2024 · COLT · PMLR 247, 5019–5073</small>
+</li>
+</ul>
+</section>
+</div>
+</div>
+</main>
+<footer class="site-footer wrap">
+  <p>Lachlan E. MacDonald</p>
+</footer>
+</body>
+</html>

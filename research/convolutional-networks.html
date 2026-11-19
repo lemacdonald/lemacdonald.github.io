@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Geometry of architecture: equivariant convolutional networks, arbitrary Lie-group actions and open questions.">
+  <meta name="color-scheme" content="light">
+  <title>Geometry of architecture — Lachlan E. MacDonald</title>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="../assets/js/math-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="site-name" href="../index.html">Lachlan E. MacDonald</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="../index.html">Home</a>
+    <a href="../research/index.html" aria-current="page">Research</a>
+<a href="../teaching.html">Teaching</a>
+<a href="../publications.html">Publication list</a>
+<a href="../talks.html">Talks</a>
+<a href="../about.html">About and CV</a>
+  </nav>
+</header>
+<main id="main" class="wrap">
+<header class="page-head"><h1>Geometry of architecture</h1></header>
+<div class="project-introduction" id="overview"><p>Many learning problems come with known transformations of the input: a change of viewpoint, for instance, can preserve the identity of an object. This can be modeled as the action of a group on inputs, which need not be particularly well-behaved. My work on this topic constructs a theory of equivariant networks for arbitrary Lie group actions.</p></div>
+<div class="article-layout"><aside class="toc" aria-label="Contents"><strong>Contents</strong>
+<a href="#equivariance">Equivariant convolutional networks</a>
+<a href="#questions">Open questions</a>
+<a href="#papers">Papers and further reading</a></aside><div class="prose">
+<section id="equivariance"><h2>Equivariant convolutional networks</h2>
+<h3 id="convolutions">From neural networks to convolutions</h3>
+<p>Classically, a neural network is given by a sequence of maps</p>
+<div class="math-block">\[\mathbb{R}^{d_0}\xrightarrow{\sigma\circ W_1}\mathbb{R}^{d_1}\xrightarrow{\sigma\circ W_2}\cdots\xrightarrow{\sigma\circ W_L}\mathbb{R}^{d_L},\]</div>
+<p>for an elementwise nonlinearity \(\sigma\) and matrices \(W_l\in\mathbb{R}^{d_{l-1}\times d_l}\). In <em>convolutional neural networks</em>, we instead regard an image as a compactly supported function in \(C_c(\mathbb{Z}^2,\mathbb{R}^k)\): the inputs are pixel coordinates, and the outputs are pixel values in \(k\) channels. The matrix maps are replaced with convolution operators \(*\psi_l\), for learned, compactly supported, matrix-valued filters \(\psi_l\).</p>
+<div class="animated-exposition"><div class="animation-text">
+<p>The point of this replacement is that convolution is <em>equivariant</em>: translation of the image commutes with application of a layer. Translating an object therefore translates its features, rather than requiring the network to learn a separate representation at each position. Pointwise nonlinearities preserve this property.</p>
+<p>More generally, if a group \(G\) acts on inputs, write \(L_u h(x)=h(u^{-1}\!\cdot x)\) for the induced action on functions. Equivariance of a layer \(\Phi\) means \(\Phi(L_u h)=L_u\Phi(h)\).</p>
+</div>
+<figure class="project-animation pixel-animation">
+  <video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/translation-equivariance-poster.webp" width="256" height="128" aria-label="A handwritten digit and its convolutional filter response translating together" aria-describedby="translation-example-caption">
+    <source src="../assets/media/translation-equivariance.mp4" type="video/mp4">
+    <p><a href="../assets/media/translation-equivariance.mp4">Open the animation</a>.</p>
+  </video>
+  <figcaption id="translation-example-caption">Input (left) and filter response (right) translate together.</figcaption>
+</figure>
+</div>
+<p>In a seminal paper, <a href="https://proceedings.mlr.press/v48/cohenc16.html">Cohen and Welling</a> extended this idea to group convolutions, including discrete rotations and reflections as well as translations. The first layer <em>lifts</em> an image to a function on the group; subsequent layers convolve functions on the group, and a final pooling operation removes the group variable, giving an invariant prediction:</p>
+<div class="math-block">\[C_c(\mathbb{Z}^2,\mathbb{R}^{d_0})\xrightarrow{\sigma\circ (*\psi_1)}C_c(\Gamma,\mathbb{R}^{d_1})\xrightarrow{\sigma\circ (*\psi_2)}\cdots\xrightarrow{\sigma\circ W_{L-1}}C_c(\Gamma,\mathbb{R}^{d_{L-1}})\xrightarrow{W_L\circ\mathrm{pool}}\mathbb{R}^{d_L},\]</div>
+<p>Such networks respect known transformations of their inputs <em>by construction</em>.</p>
+<h3 id="arbitrary">Arbitrary Lie-group actions</h3>
+<div class="animated-exposition"><div class="animation-text">
+<p>How far does this construction go? For instance, is it possible to construct networks equivariant to the action of any fixed Lie group? <a href="https://openaccess.thecvf.com/content/CVPR2022/papers/MacDonald_Enabling_Equivariance_for_Arbitrary_Lie_Groups_CVPR_2022_paper.pdf">Answering this question in the affirmative, in collaboration with Sameera Ramasinghe and Simon Lucey</a>, was my first contribution to machine learning.</p>
+
+<p>Suppose a Lie group \(G\) acts on a manifold \(X\), and that our data are encoded as elements of \(C_c(X,\mathbb{R}^{d_0})\). We would want our first convolutional layer to lift such a function to a function on \(G\) in an equivariant fashion. There is a problem here: \(G\) need not act on \(X\) properly, so that \(X\) need not admit a \(G\)-invariant measure, without which the lifting operator of Cohen-Welling is not equivariant. A concrete example of this is when \(G\) is the group \(\mathrm{SL}(3,\mathbb{R})\) acting on \(\mathbb{R}^2\) by perspective transformations (right); this transformation is ubiquitous in natural images. Our main contribution is showing that equivariant networks are nonetheless possible in this general setting.</p>
+</div>
+<figure class="project-animation pixel-animation">
+  <video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/architecture-poster.webp" width="128" height="128" aria-label="A handwritten digit undergoing homography warps that illustrate perspective transformations" aria-describedby="architecture-example-caption">
+    <source src="../assets/media/architecture.mp4" type="video/mp4">
+    <p><a href="../assets/media/architecture.mp4">Open the animation</a>.</p>
+  </video>
+  <figcaption id="architecture-example-caption">Perspective transformations of a handwritten digit.</figcaption>
+</figure>
+</div>
+
+<div class="theorem"><span class="theorem-label">Theorem (equivariance for arbitrary Lie-group actions)</span>
+<p>Given an arbitrary Lie group \(G\) acting on an arbitrary manifold \(X\), \(G\)-equivariant networks may be constructed. Specifically, given compactly supported continuous functions \(\psi_1\) on \(X\) and \(\psi_2,\dots,\psi_{L-1}\) on \(G\) and elementwise nonlinearity \(\sigma\), equivariant convolution operators \(*\psi_l\) may be defined for which the sequence</p>
+<div class="math-block">\[C_c(X,\mathbb{R}^{d_0})\xrightarrow{\sigma\circ (*\psi_1)}C_b(G,\mathbb{R}^{d_1})\xrightarrow{\sigma\circ (*\psi_2)}\cdots\xrightarrow{\sigma\circ (*\psi_{L-1})}C_b(G,\mathbb{R}^{d_L})\xrightarrow{W_L\circ\mathrm{pool}}\mathbb{R}^{d_L}\]</div>
+<p>is \(G\)-invariant. Here \(C_c\) denotes compactly supported continuous functions while \(C_b\) denotes bounded continuous functions.</p>
+</div>
+
+<p>If the group \(G\) acts nonproperly on \(X\), therefore, equivariant convolutional networks are still possible, but their features are <em>bounded</em> continuous functions on \(G\) rather than <em>compactly-supported</em> continuous functions. </p>
+
+<p>The formulas defining the convolutions in this framework are given by integrals against Haar measure on \(G\). To implement them, we parametrise filters by small neural networks and approximate the integrals by Monte Carlo sampling from the Lie algebra of \(G\). Using this implementation we were able to construct networks that performed well on small-scale invariant image classification tasks (affine and perspective-perturbed MNIST).</p>
+</section>
+<section id="questions"><h2>Open questions</h2>
+<p>Unfortunately, due to the fact the intermediate feature spaces for our theory are merely <em>bounded</em> continuous functions rather than compactly supported, we were unable to come up with an implementation that is simultaneously faithful to the theory and also computationally feasible: for a network with \(L\) convolutional layers and \(N\) Monte-Carlo samples to approximate each convolution, the memory footprint of our implementation scales as \(O(N^L)\). I do not believe it is possible to do better than this in general without sacrificing some equivariance. I am interested in whether this sacrifice can be made in a principled way to enable scalable implementation of such equivariant networks which nonethless are "equivariant enough".</p>
+<p>More general structures of symmetry, including groupoids and pseudogroups, also offer directions for investigation.</p>
+</section>
+<section id="papers"><h2>Papers and further reading</h2><article class="paper">
+  <h3><a href="https://openaccess.thecvf.com/content/CVPR2022/html/MacDonald_Enabling_Equivariance_for_Arbitrary_Lie_Groups_CVPR_2022_paper.html">Enabling Equivariance for Arbitrary Lie Groups</a></h3>
+  <p class="authors">L. E. MacDonald, S. Ramasinghe and S. Lucey</p>
+  <p class="venue">2022 · CVPR, 8183–8192 · oral presentation</p>
+  <p class="annotation">Convolutional networks for arbitrary finite-dimensional Lie groups, including actions beyond the proper-action setting.</p>
+  <div class="paper-links"><a href="https://openaccess.thecvf.com/content/CVPR2022/html/MacDonald_Enabling_Equivariance_for_Arbitrary_Lie_Groups_CVPR_2022_paper.html">Proceedings</a></div>
+</article>
+<p><a href="https://github.com/lemacdonald/equivariant-convolutions">Public code for the CVPR paper</a></p>
+<h3>Further reading</h3>
+<ul class="reading-list">
+<li>
+  <a href="https://proceedings.mlr.press/v48/cohenc16.html">Group Equivariant Convolutional Networks</a>
+  <small class="authors">T. S. Cohen and M. Welling</small>
+  <small class="venue">2016 · ICML · PMLR 48, 2990–2999</small>
+</li>
+</ul>
+</section>
+</div></div>
+
+</main>
+<footer class="site-footer wrap">
+  <p>Lachlan E. MacDonald</p>
+</footer>
+</body>
+</html>

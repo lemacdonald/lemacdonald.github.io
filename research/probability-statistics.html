@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Geometry of statistical learning: generalisation, initialisation, disintegration, local Lipschitz bounds and empirical transport.">
+  <meta name="color-scheme" content="light">
+  <title>Geometry of statistical learning — Lachlan E. MacDonald</title>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="../assets/js/math-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="site-name" href="../index.html">Lachlan E. MacDonald</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="../index.html">Home</a>
+    <a href="../research/index.html" aria-current="page">Research</a>
+<a href="../teaching.html">Teaching</a>
+<a href="../publications.html">Publication list</a>
+<a href="../talks.html">Talks</a>
+<a href="../about.html">About and CV</a>
+  </nav>
+</header>
+<main id="main" class="wrap">
+<header class="page-head"><h1>Geometry of statistical learning</h1></header>
+<div class="project-introduction" id="overview">
+<p>Why do deep learning models perform well outside of their training sample? We lack a comprehensive theory of why this happens, or of how the implicit bias of training—the preference for some fitted functions over others—affects this performance. I take a geometric perspective on this problem, seeking to understand the geometry underlying data, dynamics and statistics.</p>
+</div>
+<div class="article-layout"><aside class="toc" aria-label="Contents"><strong>Contents</strong>
+<a href="#disintegration">Disintegration along multifunctions</a>
+<a href="#learning">Initialisation and input smoothness</a>
+<a href="#future-directions">Open questions</a>
+<a href="#papers">Papers and further reading</a>
+</aside><div class="prose">
+<section id="disintegration"><h2>Disintegration along multifunctions</h2>
+<p>Classical (uniform) generalisation bounds control performance over an entire model class, independently of the data population. Their dependence on the size of that class typically make the bounds worse as an architecture grows. In practice, however, larger architectures perform better, and the amount of data required to achieve a given test performance depends strongly on the population. The scaling experiments of <a href="https://arxiv.org/abs/1909.12673">Rosenfeld et al.</a> and <a href="https://arxiv.org/abs/2102.06701">Bahri et al.</a> illustrate this: out-of-sample performance improves at a faster rate as sample size is increased for simpler data populations, and scaling models larger also improves performance.</p>
+<h3>Population-dependent bounds</h3>
+<p>If classical bounds are worst-case in population but sensitive to architecture size, perhaps one should instead consider the opposite extreme: bounds which are worst-case in architecture size but sensitive to population. Let \((\mathfrak{X},d,\mu)\) be a compact metric probability space, let \(X_1,\ldots,X_n\) be i.i.d. observations from \(\mu\), and write \(\widehat\mu_n=n^{-1}\sum_{i=1}^n\delta_{X_i}\). For a function \(g\), the generalisation gap is the discrepancy between its population and sample averages; in a learning problem, \(g\) can be the loss of a fitted model on an observation. Kantorovich–Rubinstein duality gives</p>
+<div class="theorem"><span class="theorem-label">Theorem (Kantorovich–Rubinstein bound)</span>
+<div class="math-block">\[
+\left|\int_{\mathfrak{X}} g\,d\mu-\frac1n\sum_{i=1}^n g(X_i)\right|\leq\|g\|_{\mathrm{Lip}}\,W_1(\mu,\widehat\mu_n).
+\]</div>
+</div>
+<p id="learning">This can be viewed as a <em>generalisation bound</em>, bounding the gap between the empirical loss \(\frac{1}{n}\sum_{i=1}^ng(X_i)\) and the true population loss \(\int_{\mathfrak{X}}g\,d\mu\). The Wasserstein distance measures the discrepancy between the population and its empirical sample, while \(\|g\|_{\mathrm{Lip}}\) measures the function’s sensitivity to changes in its input. Importantly for generalisation theory, the inequality holds simultaneously for all Lipschitz functions, including functions chosen using the training sample. There is precedent for this approach in <a href="https://arxiv.org/abs/2008.11245">Buchanan, Gilboa and Wright’s work on separating curves with deep networks</a>, and in <a href="https://proceedings.neurips.cc/paper/2021/hash/8c26d2fad09dc76f3ff36b6ea752b0e1-Abstract.html">Ma and Ying's</a> work on the implicit regularisation of input-smoothness by SGD. The intuition that models which vary more smoothly in inputs generalise better also drove <a href="https://proceedings.mlr.press/v202/ramasinghe23a.html">my prior work with Sameera Ramasinghe, Moshiur Farazi, Hemanth Saratchandran and Simon Lucey</a>. The Kantorovich-Rubinstein bound makes this intuition rigorous.</p>
+<p>There is an obvious problem with this perspective, however, namely the use of the global Lipschitz constant in the bound. Increasing a network’s fitting capacity can increase its steepest input variation even when its behaviour over most of the population remains well controlled. The below animation of a sine-activated network fitting a step function illustrates this: as the represented frequency increases, the global Lipschitz quantity grows, while the average local quantity is much less sensitive to the increasingly sharp transition.</p>
+<figure class="project-animation wide-animation"><video data-loop-animation autoplay controls loop muted playsinline preload="metadata" poster="../assets/media/sine-step-lipschitz-poster.webp" width="1600" height="400" aria-label="A sine network fitting a step function, with approximation error, generalisation gap and global versus average local Lipschitz quantities as frequency capacity increases" aria-describedby="sine-step-caption"><source src="../assets/media/sine-step-lipschitz.mp4" type="video/mp4"><p><a href="../assets/media/sine-step-lipschitz.mp4">Open the animation</a>.</p></video><figcaption id="sine-step-caption">From left to right: the sine network \(f\) and step target \(f_*\); the absolute error; the generalisation gap; and global versus average local Lipschitz quantities for the error as frequency capacity increases. The global quantity grows while the average remains controlled in this example. The finite-neighbourhood constants in the bound below also depend on the neighbourhood radius.</figcaption></figure>
+<p>My <a href="https://arxiv.org/abs/2507.01236">paper with James Allen Fill</a> addresses this issue directly by replacing the global Lipschitz constant in the transport bound by an average of local Lipschitz constants. The idea which led me to this problem was geometric: could one construct a probability-theoretic partition of unity?</p>
+<h3>A partition of unity for the measure</h3>
+<p>Suppose the population measure could be patched together from equal-mass pieces, each concentrated near a sample point. More precisely, given \(r>0\) and samples \(X_1,\dots,X_n\) from \(\mu\), suppose one had probability measures \((\mu_i)_{i=1}^n\) such that</p>
+<div class="math-block">\begin{equation}\frac{1}{n}\sum_{i=1}^n\mu_i = \mu,\qquad \mathrm{support}(\mu_i)\subset B(X_i,r),\,\forall i=1,\dots,n,\label{eq:partition}\end{equation}</div>
+<p>where \(B(X_i,r)\) denotes the \(r\)-ball centred at \(X_i\). Such a family is a measure-theoretic analogue of a partition of unity, commonly used in differential geometry for patching locally defined data into a global object. Just like a partition of unity, such a family of measures also patches local geometric data into a global object, in this case the desired bound in terms of the average local Lipschitz constant.
+<div class="theorem"><span class="theorem-label">Theorem (generalisation bound from local variation)</span>
+<p>Given a family \((\mu_i)_{i=1}^n\) satisfying \eqref{eq:partition}, one has</p>
+<div class="math-block" id="bounds">\begin{equation}
+\left|\int_X g\,d\mu-\frac1n\sum_{i=1}^n g(X_i)\right|\leq\frac1n\sum_{i=1}^n\int_X|g(x)-g(X_i)|\,\mu_i(dx)\leq\frac r n\sum_{i=1}^n\|g\|_{\mathrm{Lip},B_i}.\label{eq:avgcase}
+\end{equation}</div>
+</div>
+<p>The right-hand side averages local Lipschitz constants \(\|g\|_{\mathrm{Lip},B_i}\) over the sample, instead of applying the single worst constant to the entire population; the radius \(r\) stands in for the Wasserstein distance seen in the Kantorovich-Rubinstein bound. The remaining question is geometric and probabilistic: is there \(r\equiv r(n)\rightarrow0\) such that families of this form can be found with increasing probability over independent samples \(X_1,\dots,X_n\) as \(n\rightarrow\infty\)?</p>
+<h3>Disintegration along a multi-valued function</h3>
+<p>It is first necessary to uncover the conditions for the existence of such a family of measures. It turns out that such families may be described as <em>disintegrations</em> along <em>multi-valued functions</em>. Classically, a measure \(\mu\) on a space \(\mathfrak{X}\) disintegrates along the fibres of a measurable map \(f:\mathfrak{X}\rightarrow\mathfrak{Y}\) according to the formula
+<div class="math-block" id="disintegration-formula">\begin{equation}
+\mu = \int_y\mu_y\,\nu(dy),\qquad \mathrm{support}(\mu_y)\subset f^{-1}\{y\},\, \text{\(\nu\)-almost every \(y\in \mathfrak{Y}\)},\label{eq:disint}
+\end{equation}</div>
+where \(\nu\) is the pushforward of \(\mu\) by \(f\). The reader should note the formal similarity between \eqref{eq:disint} and \eqref{eq:partition}. There is, however, a material difference: whereas in \eqref{eq:disint} the sets \(f^{-1}\{y\}\) are disjoint, in \eqref{eq:partition} the corresponding sets \(B(X_i,r)\) overlap!</p>
+
+<p>The conditions \eqref{eq:partition} and \eqref{eq:disint} can be brought under a single concept by considering disintegrations along <em>multi-valued functions.</em> Specifically, in the setting of \eqref{eq:partition}, define the random multifunction \(F(x)=\{i:x\in B(X_i,r)\}\), with the uniform probability measure on the index set \(\{1,\ldots,n\}\). Its fibres are the random balls \(F^{-1}\{i\}=B(X_i,r)\), and the decomposition in \eqref{eq:partition} is exactly a disintegration along this multifunction. The first contribution of our paper is the provision of conditions of existence of such a disintegration in a fairly general setting; our proof combines Strassen’s coupling theorem with classical disintegration.</p>
+<div class="theorem"><span class="theorem-label">Theorem (disintegration along a multifunction)</span>
+<p>Let \(\mathfrak{X},\mathfrak{Y}\) be Polish spaces with Borel probability measures \(\mu,\nu\), and let \(F:\mathfrak{X}\to2^{\mathfrak{Y}}\) be a measurable multifunction with closed graph. Then \(\mu\) admits a disintegration along \(F\), i.e. a family of measures \((\mu_y)_{y\in\mathfrak{Y}}\) satisfying</p>
+<div class="math-block">\[\mu=\int_Y\mu_y\,\nu(dy),\qquad\mathrm{support}(\mu_y)\subset F^{-1}\{y\},\,\text{\(\nu\)-almost every \(y\in\mathfrak{Y}\)}\]</div>
+<p>if and only if \(\mu(F^{-1}U)\geq \nu (U)\) for every open \(U\subseteq\mathfrak{Y}\).
+</div>
+<p>For the sample-centred balls of \eqref{eq:partition}, this says that the desired family of measures exists if and only if \(\mu\) assigns measure at least \(1/n\) to \(B(X_i,r)\). It may then be asked whether such a disintegration exists with probability \(\mathbb{P}(n)\to 1\) at radii \(r(n)\to0\) as \(n\rightarrow\infty\); if this is the case, we say that the the space \((\mathfrak{X},\mu,d)\) is <em>asymptotically disintegrable</em>. We give some strong counterexamples showing asymptotic disintegrability does not always hold, however we also demonstrate a number of examples for which asymptotic disintegrability <em>does</em> hold; for such spaces, </p>
+<div class="theorem"><span class="theorem-label">Theorem (asymptotic disintegrability)</span>
+<p>For any \(c>0\):
+  <ol>
+    <li>Sufficiently nice measures on intervals, circles and embedded finite connected graphs are asymptotically disintegrable with rate \(\mathbb{P}(n) = 1-n^{c}\) and \(r(n) = (\ln(n)/n)^{1/2}\).</li>
+    <li>Sufficiently nice measures on cubes of dimension \(D\) are asymptotically disintegrable with rate \(\mathbb{P}(n) = 1-n^{-c}\) and \(r(n) = (\ln(n)/n)^{1/(2D)}\).
+    </li>
+  </ol>
+</div>
+<p>For 1-dimensional examples, our rate \(r(n)\) is thus the same as the rate of concentration of empirical measures around their mean in Wasserstein distance, so our average-case bound \eqref{eq:avgcase} gives a genuine improvement over the Kantorovich-Rubinstein bound for sufficiently spiky functions.</p>
+<h3 id="empirical">Relation to Wasserstein infinity distance</h3>
+
+Peer review informed us that our theory reinvents the wheel of Wasserstein \(\infty\) distances. Specifically, it can be shown that asymptotic disintegrability in our sense is equivalent to convergence of the empirical measures in the Wasserstein \(\infty\)-distance. This places the statistical consequences of our work within an earlier transport literature: <a href="https://arxiv.org/abs/1407.1157">García Trillos and Slepčev</a> establish empirical \(W_\infty\) estimates on regular Euclidean domains, and <a href="https://arxiv.org/abs/1801.10108">García Trillos, Gerlach, Hein and Slepčev</a> obtain corresponding estimates on compact manifolds. Under their respective hypotheses, these results imply the corresponding disintegration and local-Lipschitz bounds, and already supply the sharper sample-size exponents sought in our rate conjectures. Nonetheless, I believe that the geometric perspective pursued in our work may have some value in providing a more unified proof technique for known results in future.</p>
+</section>
+
+<section id="future-directions"><h2>Open questions</h2>
+<p>Applied to generalisation, the decay rates \(\tilde{O}(n^{-1/D})\) in sample size of our bounds are more pessimistic than the rates we measure in practice. On the other hand, the rates we see in practice are worse than the \(\tilde{O}(n^{-1/2})\) rates supplied by uniform generalisation theory. This suggests that a middle ground is desirable, one which which synthesises data structure, dynamics and architecture in a non-worst-case fashion. Contributing to the development of this middle ground is one of the goals of my research program.</p>
+</section>
+
+<section id="papers"><h2>Papers and further reading</h2>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2507.01236">Disintegration Theorem for Multifunctions, with Applications to Empirical Wasserstein Distances and Average-Case Statistical Bounds</a></h3>
+  <p class="authors">J. A. Fill and L. E. MacDonald</p>
+  <p class="venue">2025 · Preprint · arXiv:2507.01236</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2507.01236">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://proceedings.mlr.press/v202/ramasinghe23a.html">How much does Initialization Affect Generalization?</a></h3>
+  <p class="authors">S. Ramasinghe, L. E. MacDonald, M. Farazi, H. Saratchandran and S. Lucey</p>
+  <p class="venue">2023 · ICML · PMLR 202, 28637–28655</p>
+  <div class="paper-links"><a href="https://proceedings.mlr.press/v202/ramasinghe23a.html">Proceedings</a></div>
+</article>
+<h3>Further reading</h3>
+<ul class="reading-list">
+<li>
+  <a href="https://arxiv.org/abs/1909.12673">A Constructive Prediction of the Generalization Error Across Scales</a>
+  <small class="authors">J. S. Rosenfeld, A. Rosenfeld, Y. Belinkov and N. Shavit</small>
+  <small class="venue">2020 · ICLR</small>
+</li>
+<li>
+  <a href="https://arxiv.org/abs/2102.06701">Explaining Neural Scaling Laws</a>
+  <small class="authors">Y. Bahri, E. Dyer, J. Kaplan, J. Lee and U. Sharma</small>
+  <small class="venue">2024 · Proceedings of the National Academy of Sciences 121(27), article e2311878121</small>
+</li>
+<li>
+  <a href="https://arxiv.org/abs/2008.11245">Deep Networks and the Multiple Manifold Problem</a>
+  <small class="authors">S. Buchanan, D. Gilboa and J. Wright</small>
+  <small class="venue">2021 · ICLR</small>
+</li>
+<li>
+  <a href="https://proceedings.neurips.cc/paper/2021/hash/8c26d2fad09dc76f3ff36b6ea752b0e1-Abstract.html">On Linear Stability of SGD and Input-Smoothness of Neural Networks</a>
+  <small class="authors">C. Ma and L. Ying</small>
+  <small class="venue">2021 · NeurIPS 34, 16805–16817</small>
+</li>
+<li>
+  <a href="https://arxiv.org/abs/1407.1157">On the Rate of Convergence of Empirical Measures in Infinity-Transportation Distance</a>
+  <small class="authors">N. García Trillos and D. Slepčev</small>
+  <small class="venue">2015 · Canadian Journal of Mathematics 67(6), 1358–1383</small>
+</li>
+<li>
+  <a href="https://arxiv.org/abs/1801.10108">Error Estimates for Spectral Convergence of the Graph Laplacian on Random Geometric Graphs Toward the Laplace–Beltrami Operator</a>
+  <small class="authors">N. García Trillos, M. Gerlach, M. Hein and D. Slepčev</small>
+  <small class="venue">2020 · Foundations of Computational Mathematics 20(4), 827–887</small>
+</li>
+</ul></section>
+</div></div>
+
+</main>
+<footer class="site-footer wrap">
+  <p>Lachlan E. MacDonald</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Geometry of foliations: holonomy groupoids, characteristic classes, singular foliations and K-theory.">
+  <meta name="color-scheme" content="light">
+  <title>Geometry of foliations — Lachlan E. MacDonald</title>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="../assets/js/math-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="site-name" href="../index.html">Lachlan E. MacDonald</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="../index.html">Home</a>
+    <a href="../research/index.html" aria-current="page">Research</a>
+<a href="../teaching.html">Teaching</a>
+<a href="../publications.html">Publication list</a>
+<a href="../talks.html">Talks</a>
+<a href="../about.html">About and CV</a>
+  </nav>
+</header>
+<main id="main" class="wrap">
+<header class="page-head"><h1>Geometry of foliations</h1></header>
+<div class="project-introduction" id="overview">
+<div class="animated-exposition"><div class="animation-text"><p>A <em>foliation</em> of a manifold is a decomposition of the manifold into immersed submanifolds called <em>leaves</em>, which fit together in a nice tangential fashion; see the illustration for a classical example, the Reeb foliation of the solid torus.</p>
+
+<p>
+Foliated manifolds are the geometric incarnation of the solutions to first order linear systems of partial differential equations, and as such are important in both pure mathematics and its applications. They admit both interesting dynamics (holonomy) and interesting topology (characteristic classes) with which my pure mathematical research has been concerned.
+</p></div>
+<figure class="project-animation direction-media"><a href="../assets/figures/reeb-foliation-thesis.webp" aria-label="View the Reeb foliation at full size"><img src="../assets/figures/reeb-foliation-thesis.webp" width="1438" height="896" alt="Interior leaves winding around the solid torus in the Reeb foliation"></a><figcaption>Interior leaves of the Reeb foliation of the solid torus. <a href="https://ro.uow.edu.au/articles/thesis/Characteristic_Classes_of_Foliated_Manifolds_in_Noncommutative_Geometry/27665679?file=50383236">Figure 2.2 of my thesis</a>, p. 16.</figcaption></figure>
+</div></div>
+<div class="article-layout"><aside class="toc" aria-label="Contents"><strong>Contents</strong>
+<a href="#foliations">Holonomy</a>
+<a href="#classes">Characteristic maps</a>
+<a href="#other">Foliations in noncommutative geometry</a>
+<a href="#questions">Open questions</a>
+<a href="#papers">Papers and further reading</a></aside><div class="prose">
+<section id="foliations"><h2>Holonomy</h2>
+<div class="animated-exposition"><div class="animation-text">
+<p>A <em>transversal</em> through a foliated manifold is a submanifold that cuts across leaves. Given a path in a leaf, a transversal through the starting point may be mapped to a transversal through the end point by following neighbouring paths in neighbouring leaves (see the figure to the right). If the path is a loop, so the start and end point coincide, then the induced map sends transversals to themselves. In particular, a sufficiently small loop always induces the identity map; on the other hand, if the foliation is sufficiently nontrivial, certain loops induce non-trivial maps on transversals corresponding to leaves wrapping around themselves. This phenomenon is called <em>holonomy</em>, and the holonomy of all leafwise paths can be organised into a single algebraic object called a <em>holonomy groupoid</em>.</p>
+</div>
+<figure class="project-animation"><a href="../assets/figures/holonomy-thesis.webp" aria-label="View the holonomy illustration at full size"><img src="../assets/figures/holonomy-thesis.webp" width="1434" height="1396" alt="A red path from x to y on a leaf L, and a nearby path from x prime to y prime on L prime, with black transversals at the endpoints" loading="lazy"></a><figcaption>Following a leafwise path transports nearby transverse points. <a href="https://ro.uow.edu.au/articles/thesis/Characteristic_Classes_of_Foliated_Manifolds_in_Noncommutative_Geometry/27665679?file=50383236">Figure 3.1 of my thesis</a>, p. 43.</figcaption></figure>
+</div>
+<p>This notion of foliation holonomy is, a-priori, different from the notion of holonomy more commonly encountered in gauge theory, wherein it is a manifestation of the curvature of a connection in a principal fibre bundle. My <a href="https://doi.org/10.1007/s10455-021-09792-3">work on foliated bundles</a> gives a construction of foliation holonomy which realises it precisely in this gauge-theoretic form, namely as the holonomy of a leafwise flat connection in an infinite-dimensional bundle of germs of local conservation laws; by this technique I was also able to produce novel holonomy groupoids for foliated bundles. My <a href="https://doi.org/10.3842/SIGMA.2021.043">subsequent work</a> extended this construction to singular foliations.
+</section>
+<section id="classes"><h2>Characteristic maps</h2>
+<p>Foliations support topological invariants called <em>characteristic classes</em>. A particularly important example is the <em>Godbillon-Vey class</em>, whose non-triviality indicates dynamical properties such as chaos in the space of leaves. Such classes can be realised as arising from the classifying space of the holonomy groupoid of the foliation.</p>
+<p>Groupoid constructions of characteristic classes historically pass through reduction of the groupoid by a choice of complete transversal to a Morita-equivalent étale groupoid. The cohomological information is preserved, but its relation to the global leafwise geometry becomes harder to see. My <a href="https://doi.org/10.1007/s00209-021-02832-5">paper on the full holonomy groupoid</a> gives a Chern–Weil construction directly in terms of that geometry.</p>
+
+<p>More recently, in <a href="https://arxiv.org/abs/2106.10078">work with Benjamin McMillan</a>, we extend this geometric construction to singular foliations whose singularities are sufficiently mild that they can still be represented by maps into Haefliger's classifying space. Our theory gives a complete Chern-Weil construction of the usual foliation characteristic classes for such foliations by using geometry that is appropriately adapted to singularities.</p>
+</section>
+<section id="other"><h2>Foliations in noncommutative geometry</h2>
+<p>The space of leaves of a foliation is often too singular to study as an ordinary manifold. In Connes' approach to noncommutative geometry, one instead studies the convolution algebra of the holonomy groupoid. Its operator-algebraic invariants give access to the geometry and topology of the foliation.</p>
+<p>Holonomy groupoids need not be Hausdorff. Foliations therefore motivate the development of equivariant \(KK\)-theory for non-Hausdorff groupoids, which is the subject of <a href="https://doi.org/10.1016/j.geomphys.2020.103709">my survey of this theory</a>. The paper gives a unified account of its constructions and supplies detailed proofs of results that had previously only been stated or used in applications.</p>
+<p>Among the constructions that can be realised at this level are the characteristic classes of foliations. In <a href="https://doi.org/10.2140/akt.2020.5.249">my paper with Adam Rennie</a>, we in particular realise the Godbillon-Vey invariant as a semifinite spectral triple constructed from an equivariant \(KK\)-class, whose Chern character recovers the Connes-Moscovici cyclic cocycle representative of the Godbillon-Vey invariant.</p>
+</section>
+<section id="questions"><h2>Open questions</h2><p>Among my favourite ideas in mathematics are those relating singularities to topology, such as Bott's theorems on the zeros of vector fields. I am very intrigued by the possibility that sufficiently singular foliations might admit topological invariants that do not arise in the setting of regular foliations, and how such invariants might be constructed. One possibility I would like to investigate (time permitting!) is whether certain types of singularities admit their own local models, just like regular foliations are locally modelled by the Haefliger groupoid of germs of diffeomorphisms, and whether such local models admit their own interesting characteristic classes. </p></section>
+<section id="papers"><h2>Papers and further reading</h2>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1007/s00209-021-02832-5">A characteristic map for the holonomy groupoid of a foliation</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2022 · Mathematische Zeitschrift 300(2), 1093–1115</p>
+  <p class="annotation">Characteristic classes at the level of the full holonomy groupoid, retaining leafwise geometry.</p>
+  <div class="paper-links"><a href="https://doi.org/10.1007/s00209-021-02832-5">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2106.10078">Chern-Weil theory for Haefliger-singular foliations</a></h3>
+  <p class="authors">L. E. MacDonald and B. McMillan</p>
+  <p class="venue">2026 · Differential Geometry and its Applications · to appear</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2106.10078">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1007/s10455-021-09792-3">Hierarchies of holonomy groupoids for foliated bundles</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2021 · Annals of Global Analysis and Geometry 60(3), 609–646</p>
+  <div class="paper-links"><a href="https://doi.org/10.1007/s10455-021-09792-3">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.3842/SIGMA.2021.043">The holonomy groupoids of singularly foliated bundles</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2021 · SIGMA 17, article 043</p>
+  <div class="paper-links"><a href="https://doi.org/10.3842/SIGMA.2021.043">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.2140/akt.2020.5.249">The Godbillon–Vey invariant and equivariant KK-theory</a></h3>
+  <p class="authors">L. E. MacDonald and A. Rennie</p>
+  <p class="venue">2020 · Annals of K-Theory 5(2), 249–294</p>
+  <div class="paper-links"><a href="https://doi.org/10.2140/akt.2020.5.249">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1016/j.geomphys.2020.103709">Equivariant KK-theory for non-Hausdorff groupoids</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2020 · Journal of Geometry and Physics 154, article 103709</p>
+  <div class="paper-links"><a href="https://doi.org/10.1016/j.geomphys.2020.103709">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1007/s00220-021-04096-w">On the Chern character in higher twisted K-theory and spherical T-duality</a></h3>
+  <p class="authors">L. E. MacDonald, with V. Mathai and H. Saratchandran</p>
+  <p class="venue">2021 · Communications in Mathematical Physics 385(1), 331–368</p>
+  <div class="paper-links"><a href="https://doi.org/10.1007/s00220-021-04096-w">Journal</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://ro.uow.edu.au/articles/thesis/Characteristic_Classes_of_Foliated_Manifolds_in_Noncommutative_Geometry/27665679?file=50383236">Characteristic Classes of Foliated Manifolds in Noncommutative Geometry</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2019 · Doctoral thesis · University of Wollongong</p>
+  <div class="paper-links"><a href="https://ro.uow.edu.au/articles/thesis/Characteristic_Classes_of_Foliated_Manifolds_in_Noncommutative_Geometry/27665679?file=50383236">Thesis</a></div>
+</article>
+<h3>Further reading</h3>
+<ul class="reading-list">
+<li>
+  <a href="https://doi.org/10.1307/mmj/1028999721">Vector fields and characteristic numbers</a>
+  <small class="authors">R. Bott</small>
+  <small class="venue">1967 · Michigan Mathematical Journal 14(2), 231–244</small>
+</li>
+</ul>
+</section>
+</div></div>
+
+</main>
+<footer class="site-footer wrap">
+  <p>Lachlan E. MacDonald</p>
+</footer>
+</body>
+</html>

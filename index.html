@@ -1,359 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-AU">
 <head>
-  <meta charset="utf-8" />
-  <title>Lachlan Ewen MacDonald - Academic Portfolio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{
-      --text:#333;
-      --link:#1a0dab;
-      --maxw: 800px;
-      --muted:#666;
-      --border:#e6e6e6;
-      --bg:#fafafa;
-    }
-    *{box-sizing:border-box}
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0 auto;
-      max-width: var(--maxw);
-      padding: 20px;
-      color: var(--text);
-      background: #fff;
-    }
-    .container { padding: 20px; }
-    h1, h2 { color: var(--text); margin-top: 0.6em; }
-    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
-    .subtitle{ color: var(--muted); margin-top: 0 }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 10px; }
-    a { color: var(--link); text-decoration: none; }
-    a:hover, a:focus { text-decoration: underline; }
-    img.profile-pic {
-      max-width: 200px;
-      height: auto;
-      display: block;
-      margin: 0 auto 10px;
-      border-radius: 8px;
-    }
-    /* Details / summary (dropdowns) */
-    details {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.5rem 0.75rem;
-      background: #fff;
-      margin: 0.75rem 0;
-    }
-    details[open] { background: var(--bg); }
-    summary {
-      cursor: pointer;
-      font-weight: bold;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      outline: none;
-    }
-    summary::-webkit-details-marker { display: none; }
-    .chev {
-      display:inline-block;
-      transform: rotate(0deg);
-      transition: transform 0.2s ease;
-      font-size: 0.95em;
-      color: var(--muted);
-    }
-    details[open] .chev { transform: rotate(90deg); }
-    .pub-item, .talk-item {
-      padding: 0.4rem 0;
-      border-bottom: 1px dashed var(--border);
-    }
-    .pub-item:last-child, .talk-item:last-child { border-bottom: 0; }
-    .venue { font-style: italic; }
-    .year { color: var(--muted); }
-    .tag { display:inline-block; font-size: 0.8rem; color:#0b5; border:1px solid #0b5; border-radius:999px; padding:0 0.4rem; margin-left:0.35rem;}
-    .note { color: var(--muted); font-size: 0.95rem; }
-    .contact { margin-top: 0.25rem; }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lachlan E. MacDonald is a mathematician studying the geometry of deep learning, learning dynamics, invariant geometry and symmetry.">
+  <meta name="color-scheme" content="light">
+  <title>The geometry of deep learning — Lachlan E. MacDonald</title>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script defer src="assets/js/site.js"></script>
+
 </head>
 <body>
-  <div class="container">
-    <h1>Lachlan Ewen MacDonald</h1>
-    <p class="subtitle">Academic Portfolio</p>
-    <img src="me.jpg" alt="Lachlan Ewen MacDonald" class="profile-pic">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="site-name" href="index.html">Lachlan E. MacDonald</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="research/index.html">Research</a>
+<a href="teaching.html">Teaching</a>
+<a href="publications.html">Publication list</a>
+<a href="talks.html">Talks</a>
+<a href="about.html">About and CV</a>
+  </nav>
+</header>
+<main id="main" class="wrap">
 
-    <p>
-      Postdoctoral researcher, University of Pennsylvania, <a href="https://ideas.seas.upenn.edu/" target="_blank" rel="noopener">Innovation in Data Engineering and Science (IDEAS)</a>.
-    </p>
-
-<h2>About Me</h2>
-
-<p>I am an Australian mathematician, currently working as a postdoctoral researcher with <a href="https://www.grasp.upenn.edu/people/rene-vidal/" target="_blank" rel="noopener">René Vidal</a> at <a href="https://ideas.seas.upenn.edu/" target="_blank" rel="noopener">IDEAS, University of Pennsylvania</a>, developing mathematical foundations for deep learning. My present focus is the <a href="https://youtu.be/Tx-sNdkrNHs?si=vbTYSDziLmXqQ5wf" target="_blank" rel="noopener">geometry and dynamics of large-step gradient descent</a>. I am on the job market.</p>
-
-<p>I did my undergraduate and graduate studies at the <a href="https://www.uow.edu.au/" target="_blank" rel="noopener">University of Wollongong</a>. My <a href="https://ro.uow.edu.au/articles/thesis/Characteristic_Classes_of_Foliated_Manifolds_in_Noncommutative_Geometry/27665679?file=50383236" target="_blank" rel="noopener">doctorate</a>, advised by <a href="https://rennieillawarramath.com/" target="_blank" rel="noopener">Adam Rennie</a>, was in the noncommutative geometry of foliated manifolds. I held postdoctoral positions in pure mathematics at the <a href="https://www.anu.edu.au/" target="_blank" rel="noopener">Australian National University</a>, with <a href="https://www.science.org.au/profile/alan-carey" target="_blank" rel="noopener">Alan Carey</a>, and the <a href="https://www.adelaide.edu.au/" target="_blank" rel="noopener">University of Adelaide</a>, with <a href="https://researchers.adelaide.edu.au/profile/mathai.varghese" target="_blank" rel="noopener">Mathai Varghese</a>, before moving over to machine learning in 2021. I have since held postdoctoral positions focusing on deep learning theory with <a href="https://researchers.adelaide.edu.au/profile/simon.lucey" target="_blank" rel="noopener">Simon Lucey at the University of Adelaide</a>, and, since 2023, with René Vidal at <a href="https://www.jhu.edu/" target="_blank" rel="noopener">Johns Hopkins University</a> and the <a href="https://www.upenn.edu/" target="_blank" rel="noopener">University of Pennsylvania</a>. My journey would not have been possible without these mentors, and I am grateful to all of them.</p>
-
-<p>My current focus is the interaction between loss geometry and algorithm behaviour via differential geometry and dynamical systems theory. Recent highlights include a new <a href="https://arxiv.org/abs/2604.18202 " target="_blank" rel="noopener">centre manifold theorem for gradient descent</a>, with applications to <a href="https://arxiv.org/abs/2607.08380" target="_blank" rel="noopener">new normal form and convergence theorems</a> for the dynamics of large-step gradient descent near a manifold of flat minima.</p>
-
-<p>I spend my spare time philosophising.</p>
-
-
-    <h2>Publications</h2>
-
-    <!-- Published -->
-    <details>
-      <summary><span class="chev">▸</span> Published / Accepted</summary>
-      <div class="note">Peer-reviewed journal and conference articles.</div>
-      <div class="pub-item">
-        <strong>Classification at the Edge of Stability: Unifying Self-Stabilization and Convergence Rates</strong>
-        with S. Tarmoun, K. Emmanouilidis, Z. Xu, R. Vidal.
-        <span class="venue">NeurIPS</span> <span class="year">2026</span>.
-      </div>
-      <div class="pub-item">
-        <strong>A Margin Perspective on LoRA: Robustness to Catastrophic Forgetting and Adapter Merging (MaLoRA)</strong>
-        with with Z. Xu, H. Min, S. Tarmoun, W. Su and R. Vidal.
-        <span class="venue">NeurIPS</span> <span class="year">2026</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Chern-Weil theory for Haefliger-singular foliations</strong>
-        with B. McMillan.
-        <span class="venue">to appear in Differential Geometry and its Applications</span> <span class="year">2026</span>.
-      </div>
-      <div class="pub-item">
-        <strong>On the Convergence, Implicit Bias and Edge of Stability of Gradient Descent in Deep Learning</strong> <span class="tag">equal first author</span><br>
-        with H. Min, R. Vidal.
-        <span class="venue">IEEE Signal Processing Magazine</span> <span class="year">2026</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Convergence Rates for Gradient Descent at the Edge of Stability in Overparametrised Least Squares</strong> <span class="tag">first author</span><br>
-        with Z. Xu, H. Min, S. Tarmoun, L. Palma, R. Vidal.
-        <span class="venue">NeurIPS</span> <span class="year">2025</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Understanding the Learning Dynamics of LoRA: A Gradient Flow Perspective on Low-Rank Adaptation in Matrix Factorization</strong><br>
-        with Z. Xu, H. Min, J. Luo, S. Tarmoun, E. Mallada, R. Vidal.
-        <span class="venue">AISTATS</span> <span class="year">2024</span>.
-      </div>
-      <div class="pub-item">
-        <strong>On skip connections and normalisation layers in deep optimisation</strong> <span class="tag">first author</span><br>
-        with J. Valmadre, H. Saratchandran, S. Lucey.
-        <span class="venue">NeurIPS</span> <span class="year">2023</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Curvature-Aware Training for Coordinate Networks</strong><br>
-        with H. Saratchandran, S. F. Ch'ng, S. Ramasinghe, S. Lucey.
-        <span class="venue">ICCV</span> <span class="year">2023</span>.
-      </div>
-      <div class="pub-item">
-        <strong>How much does Initialization Affect Generalization?</strong><br>
-        with S. Ramasinghe, M. Farazi, H. Saratchandran, S. Lucey.
-        <span class="venue">ICML</span> <span class="year">2023</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Flow Supervision for Deformable NeRF</strong><br>
-        with C. Wang, L. A. Jeni, S. Lucey.
-        <span class="venue">CVPR</span> <span class="year">2023</span>.
-      </div>
-      <div class="pub-item">
-        <strong>On Quantizing Implicit Neural Representations</strong><br>
-        with C. Gordon, S. F. Chng, S. Lucey.
-        <span class="venue">WACV</span> <span class="year">2023</span>.
-      </div>
-      <div class="pub-item">
-        <strong>On the Frequency Bias of Coordinate-MLPs</strong> (second author)<br>
-        with S. Ramasinghe, S. Lucey.
-        <span class="venue">NeurIPS</span> <span class="year">2022</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Enabling Equivariance for Arbitrary Lie Groups</strong> <span class="tag">first author</span><br>
-        with S. Ramasinghe, S. Lucey.
-        <span class="venue">CVPR (oral)</span> <span class="year">2022</span>.
-      </div>
-      <div class="pub-item">
-        <strong>A characteristic map for the holonomy groupoid of a foliation</strong>.<br>
-        <span class="venue">Mathematische Zeitschrift</span> <span class="year">2021</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Hierarchies of holonomy groupoids for foliated bundles</strong>.<br>
-        <span class="venue">Annals of Global Analysis and Geometry</span> <span class="year">2021</span>.
-      </div>
-      <div class="pub-item">
-        <strong>The holonomy groupoids of singularly foliated bundles</strong>.<br>
-        <span class="venue">SIGMA</span> <span class="year">2021</span>, <strong>17</strong>.
-      </div>
-      <div class="pub-item">
-        <strong>On the Chern character in Higher Twisted K-theory and spherical T-duality</strong><br>
-        with V. Mathai, H. Saratchandran.
-        <span class="venue">Communications in Mathematical Physics</span> <span class="year">2021</span>, <strong>385</strong>.
-      </div>
-      <div class="pub-item">
-        <strong>The Godbillon-Vey invariant and equivariant KK-theory</strong><br>
-        with A. Rennie.
-        <span class="venue">Annals of K-theory</span> <span class="year">2020</span>, <strong>5</strong>.
-      </div>
-      <div class="pub-item">
-        <strong>Equivariant KK-theory for non-Hausdorff groupoids</strong>.<br>
-        <span class="venue">Journal of Geometry and Physics</span> <span class="year">2020</span>, <strong>154</strong>.
-      </div>
-      <div class="pub-item">
-        <strong>Theoretical Consideration of Superconducting Coils for Compact Superconducting Magnetic Energy Storage Systems</strong><br>
-        with A. Pan, H. Baiej, P. Cooper.
-        <span class="venue">IEEE Transactions on Applied Superconductivity</span> <span class="year">2016</span>, <strong>26</strong>.
-      </div>
-    </details>
-
-    <!-- Preprints / Under review -->
-    <details>
-      <summary><span class="chev">▸</span> Submitted / Under review</summary>
-       <div class="pub-item">
-        <strong>Dynamics of Gradient Descent with Large Step Size Near a Manifold of Flat Minima</strong><br>
-         with R. Vidal.
-        <span class="year">2026</span>.
-        <a href="https://arxiv.org/abs/2607.08380" target="_blank" rel="noopener">arXiv:2607.08380</a>
-      </div>
-      <div class="pub-item">
-        <strong>SGD at the Edge of Stability: Stochastic Stabilization with Large Learning Rates</strong><br>
-         with K. Emmanouilidis, S. Tarmoun and R. Vidal
-        <span class="year">2026</span>.
-        <a href="https://arxiv.org/abs/arXiv:2606.30930" target="_blank" rel="noopener">arXiv:2606.30930</a>
-      </div>
-      <div class="pub-item">
-        <strong>Classification at the Edge of Stability: Unifying Self-Stabilization and Convergence Rates</strong><br>
-         with S. Tarmoun, K. Emmanouilidis, Z. Xu and R. Vidal
-        <span class="year">2026</span>.
-      </div>
-      <div class="pub-item">
-        <strong>Centre manifold theorem for maps along manifolds of fixed points </strong><br>
-        <span class="year">2026</span>.
-        <a href="https://arxiv.org/abs/2604.18202 " target="_blank" rel="noopener">arXiv:2604.18202 </a>
-      </div>
-      <div class="pub-item">
-        <strong>Disintegration theorem for multifunctions, with applications to empirical Wasserstein distances and average-case statistical bounds</strong><br>
-        with J. Fill.
-        <span class="year">2025</span>.
-        <a href="https://arxiv.org/abs/2507.01236" target="_blank" rel="noopener">arXiv:2507.01236</a>
-      </div>
-      <div class="pub-item">
-        <strong>Chern-Weil theory for Haefliger-singular foliations</strong><br>
-        with B. McMillan.
-        <span class="year">2021</span>.
-        <a href="https://arxiv.org/abs/2106.10078" target="_blank" rel="noopener">arXiv:2106.10078</a>
-      </div>
-    </details>
-
-    <h2>Awards &amp; Honours</h2>
-
-    <details>
-      <summary><span class="chev">▸</span> Awards</summary>
-    
-      <div class="pub-item">
-        <strong>Best Thesis Award</strong><br>
-        <span class="venue">The University of Wollongong</span>, 2019<br>
-        Awarded for the best PhD thesis in the Faculty of Engineering and Information Sciences.
-      </div>
-    
-      <div class="pub-item">
-        <strong>University Medal</strong><br>
-        <span class="venue">The University of Wollongong</span>, 2015<br>
-        First in the Faculty of Engineering and Information Sciences.
-      </div>
-    
-      <div class="pub-item">
-        <strong>Undergraduate Awards</strong><br>
-        <span class="venue">The University of Wollongong</span>, 2010–2014<br>
-        Numerous research scholarships and awards for academic excellence.
-      </div>
-    
-    </details>
-
-    <h2>Talks &amp; Presentations</h2>
-    <details>
-      <summary><span class="chev">▸</span> Full list</summary>
-      <div class="talk-item">
-        <strong>Convergence Rates for Gradient Descent at the Edge of Stability in Overparametrised Least Squares</strong><br>
-        NeurIPS 2025 — Poster presentation. <a href="https://neurips.cc/Conferences/2025" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>On skip connections and normalisation layers in deep optimisation</strong><br>
-        NeurIPS 2023 — Poster presentation. <a href="https://neurips.cc/Conferences/2023" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Towards a formal theory of deep optimisation</strong><br>
-        Johns Hopkins University — MINDS Seminar (2022). <a href="https://www.jhu.edu/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>On the Frequency Bias of Coordinate MLPs</strong><br>
-        NeurIPS 2022 — Poster presentation. <a href="https://neurips.cc/Conferences/2022" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Towards a formal theory of deep optimisation</strong><br>
-        Carnegie Mellon University — VASC Seminar (2022). <a href="https://www.cmu.edu/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>General equivariance in deep learning</strong><br>
-        Lockheed-Martin USA (2022). <a href="https://www.lockheedmartin.com/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Enabling Equivariance for Arbitrary Lie Groups</strong><br>
-        CVPR 2022 — Oral presentation. <a href="https://cvpr2022.thecvf.com/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Equivariance in deep learning</strong><br>
-        Lockheed-Martin Australia — STELarLab presentation (2022). <a href="https://lockheedmartin.com/en-au/stelarlab-research-development-operations-centre.html" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Chern-Weil theory for singular foliations</strong><br>
-        University of New South Wales — Pure Math Seminar (2021). <a href="http://unsw.edu.au" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Chern-Weil theory for singular foliations</strong><br>
-        Global Noncommutative Geometry Seminar (Virtual, 2021). <a href="https://globalncgseminar.org/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Chern-Weil theory for singular foliations</strong><br>
-        University of Adelaide — Differential Geometry Seminar (2021). <a href="http://adelaide.edu.au" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Holonomy groupoids via conservation laws</strong><br>
-        Singular Foliations and Related Structures Workshop (Virtual, 2020). <a href="https://esaga.uni-due.de/leonid.ryvkin/sfars/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Conservation laws and the holonomy of foliated manifolds</strong><br>
-        University of Wollongong — NCG &amp; Operator Algebras Seminar (2020). <a href="http://uow.edu.au" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Dynamical invariants of foliated manifolds</strong><br>
-        University of Adelaide — Analysis on Manifolds (2019). <a href="http://adelaide.edu.au" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Dynamical invariants of foliated manifolds</strong><br>
-        University of Wollongong — Geometric Analysis Seminar (2019). <a href="http://uow.edu.au" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>Dynamical invariants of foliated manifolds</strong><br>
-        Chalmers University of Technology — Analysis &amp; Probability Seminar (2019). <a href="http://chalmers.se" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>The Godbillon-Vey invariant in equivariant KK-theory</strong><br>
-        Université Clermont Auvergne — Séminaire et Groupe de travail GAAO (2018). <a href="http://uca.fr" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>The Godbillon-Vey invariant in equivariant KK-theory</strong><br>
-        Université Paris Diderot — Séminaire d’Algèbres d’Opérateurs (2018). <a href="http://univ-paris-diderot.fr/" target="_blank" rel="noopener">Link</a>
-      </div>
-      <div class="talk-item">
-        <strong>The Godbillon-Vey invariant in equivariant KK-theory</strong><br>
-        Université Toulouse — ANR SINGSTAR workshop “Index Theory: Interactions and Applications” (2018). <a href="http://univ-tlse3.fr" target="_blank" rel="noopener">Link</a>
-      </div>
-    </details>
-
-    <h2>Contact</h2>
-    <p class="contact">Email: <a href="mailto:lemacdonald@protonmail.com">lemacdonald@protonmail.com</a></p>
+<section class="home-introduction" aria-labelledby="home-title">
+  <div>
+    <h1 id="home-title">The geometry of deep learning</h1>
+    <p>My research aims at understanding the essence of deep learning and what its limits might be. I approach this problem from a background in geometry, and seek to contribute to the construction of geometric foundations for optimisation, architecture and statistical learning that bring our theory of deep learning closer to what we see in practice. You can find a (hopefully accessible) presentation on my recent work <a href="https://youtu.be/Tx-sNdkrNHs"><em>here</em></a>.</p>
+    <p>I also maintain an interest in pure mathematics and am troubled by the implications of the recent application of AI to mathematics. Ultimately, however, I believe that if we maintain a commitment to human insight then AI and its theoretical study have the potential to develop a relationship with mathematics analogous to that enjoyed by mathematical physics: one of mutual enrichment and benefit.</p>
   </div>
+  <figure class="intro-portrait">
+    <img src="me.jpg" width="390" height="481" alt="Lachlan E. MacDonald" fetchpriority="high">
+  </figure>
+</section>
+<section class="section" aria-labelledby="selected-papers">
+  <div class="section-top"><h2 id="selected-papers">Selected papers</h2><a class="small-link" href="publications.html">Publication list</a></div>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2607.08380">Dynamics of Gradient Descent with Large Step Size Near a Manifold of Flat Minima</a></h3>
+  <p class="authors">L. E. MacDonald and R. Vidal</p>
+  <p class="venue">2026 · Preprint · arXiv:2607.08380</p>
+  <p class="annotation">A local normal form in arbitrary codimension, three convergence regimes, and the geometry of flat minima in deep matrix factorisation.</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2607.08380">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://arxiv.org/abs/2604.18202">Locally Invariant Manifolds and Foliations</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2026 · Preprint · arXiv:2604.18202</p>
+  <p class="annotation">Locally invariant geometry for smooth maps that need not be invertible, motivated by large-step optimisation.</p>
+  <div class="paper-links"><a href="https://arxiv.org/abs/2604.18202">Preprint</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/d9af4d6ac714626b652da5616ca71f99-Abstract-Conference.html">Convergence Rates for Gradient Descent on the Edge of Stability for Overparametrised Least Squares</a></h3>
+  <p class="authors">L. E. MacDonald, H. Min, L. Palma, S. Tarmoun, Z. Xu and R. Vidal</p>
+  <p class="venue">2025 · NeurIPS 38</p>
+  <p class="annotation">The codimension-one starting point of the large-step program, subsequently extended and refined in the 2026 work.</p>
+  <div class="paper-links"><a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/d9af4d6ac714626b652da5616ca71f99-Abstract-Conference.html">Proceedings</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://openaccess.thecvf.com/content/CVPR2022/html/MacDonald_Enabling_Equivariance_for_Arbitrary_Lie_Groups_CVPR_2022_paper.html">Enabling Equivariance for Arbitrary Lie Groups</a></h3>
+  <p class="authors">L. E. MacDonald, S. Ramasinghe and S. Lucey</p>
+  <p class="venue">2022 · CVPR, 8183–8192 · oral presentation</p>
+  <p class="annotation">Convolutional networks for arbitrary finite-dimensional Lie groups, including actions beyond the proper-action setting.</p>
+  <div class="paper-links"><a href="https://openaccess.thecvf.com/content/CVPR2022/html/MacDonald_Enabling_Equivariance_for_Arbitrary_Lie_Groups_CVPR_2022_paper.html">Proceedings</a></div>
+</article>
+<article class="paper">
+  <h3><a href="https://doi.org/10.1007/s00209-021-02832-5">A characteristic map for the holonomy groupoid of a foliation</a></h3>
+  <p class="authors">L. E. MacDonald</p>
+  <p class="venue">2022 · Mathematische Zeitschrift 300(2), 1093–1115</p>
+  <p class="annotation">Characteristic classes at the level of the full holonomy groupoid, retaining leafwise geometry.</p>
+  <div class="paper-links"><a href="https://doi.org/10.1007/s00209-021-02832-5">Journal</a></div>
+</article>
+</section>
 
-  <script>
-    // Make the first details (Published) open by default; Submitted and Talks closed.
-    // Chevrons rotate via CSS; nothing else needed here.
-  </script>
+</main>
+<footer class="site-footer wrap">
+  <p>Lachlan E. MacDonald</p>
+</footer>
 </body>
 </html>
